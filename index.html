@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>圓周長生活應用大挑戰｜國小資源班互動數學</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f0f7ff 0%, #e6f4ea 100%);
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.12);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      line-height: 1.6;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 2px solid #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    /* 魔王關卡外框特效 */
+    .app-container.boss-theme {
+      background: linear-gradient(180deg, #1e1b2e 0%, #2a1829 100%);
+      color: #f8fafc;
+      border: 2px solid #f59e0b;
+      box-shadow: 0 16px 36px rgba(220, 38, 38, 0.28);
+    }
+
+    /* 頂部標題列 */
+    .app-header {
+      background: linear-gradient(90deg, #2563eb, #3b82f6);
+      color: #ffffff;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .boss-theme .app-header {
+      background: linear-gradient(90deg, #991b1b, #b45309);
+    }
+
+    .app-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pi-badge {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+
+    /* 畫面切換區塊 */
+    .screen {
+      padding: 28px 24px;
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- 1. 開始畫面 --- */
+    .welcome-hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .hero-icon {
+      font-size: 3.6rem;
+      margin-bottom: 8px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .welcome-hero h2 {
+      font-size: 1.65rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .welcome-hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .rules-box {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .rule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.98rem;
+    }
+
+    .rule-icon {
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .input-group {
+      max-width: 420px;
+      margin: 0 auto 20px;
+      text-align: center;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .name-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1.15rem;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-weight: 700;
+      color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+
+    .name-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 2px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    /* --- 2. 答題狀態列 --- */
+    .status-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-pill {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .boss-theme .stat-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .boss-theme .stat-label {
+      color: #cbd5e1;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .boss-theme .stat-value {
+      color: #fbbf24;
+    }
+
+    .combo-pop {
+      animation: popScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: #d97706 !important;
+    }
+
+    @keyframes popScale {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    /* 進度條 */
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .boss-theme .progress-track {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      width: 12.5%;
+      transition: width 0.4s ease;
+    }
+
+    .boss-theme .progress-fill {
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+    }
+
+    /* 魔王橫幅 */
+    .boss-banner {
+      display: none;
+      background: linear-gradient(90deg, #dc2626, #d97706);
+      color: #ffffff;
+      text-align: center;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    .boss-theme .boss-banner {
+      display: block;
+    }
+
+    @keyframes pulseGlow {
+      from { transform: scale(0.99); }
+      to { transform: scale(1.01); }
+    }
+
+    /* 題目卡片 */
+    .question-card {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .boss-theme .question-card {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: #f59e0b;
+    }
+
+    .q-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .q-object-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .boss-theme .q-object-badge {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .hint-toggle-btn {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1.5px solid #f59e0b;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .hint-toggle-btn:hover {
+      background: #fde68a;
+    }
+
+    .q-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.75;
+    }
+
+    .highlight-num {
+      display: inline-block;
+      background: #fef08a;
+      color: #854d0e;
+      padding: 0 8px;
+      border-radius: 6px;
+      font-weight: 900;
+      border-bottom: 2px solid #eab308;
+    }
+
+    /* 公式提示框 */
+    .hint-box {
+      display: none;
+      margin-top: 14px;
+      background: #fffbeb;
+      border-left: 5px solid #f59e0b;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #78350f;
+      font-size: 1rem;
+    }
+
+    .hint-box.show {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    /* 四選一按鈕網格 */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .option-btn {
+      background: #ffffff;
+      border: 2.5px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 18px 16px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.18s ease;
+      text-align: left;
+      box-shadow: var(--shadow-md);
+      font-family: inherit;
+    }
+
+    .boss-theme .option-btn {
+      background: #27233a;
+      border-color: #4c4669;
+      color: #f8fafc;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #eff6ff;
+      transform: translateY(-2px);
+    }
+
+    .boss-theme .option-btn:hover:not(:disabled) {
+      border-color: #fbbf24;
+      background: #36304f;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 0.92;
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .boss-theme .option-letter {
+      background: #3f3a59;
+      color: #e2e8f0;
+    }
+
+    /* 答對與答錯選項樣式 */
+    .option-btn.correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success) !important;
+      color: #14532d !important;
+    }
+
+    .option-btn.correct .option-letter {
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .option-btn.wrong {
+      background: var(--danger-bg) !important;
+      border-color: var(--danger) !important;
+      color: #7f1d1d !important;
+    }
+
+    .option-btn.wrong .option-letter {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    /* 即時診斷回饋區 */
+    .feedback-panel {
+      display: none;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      font-size: 1.05rem;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .feedback-panel.show {
+      display: block;
+    }
+
+    .feedback-panel.is-correct {
+      background: var(--success-bg);
+      border: 2px solid var(--success);
+      color: #14532d;
+    }
+
+    .feedback-panel.is-wrong {
+      background: var(--danger-bg);
+      border: 2px solid var(--danger);
+      color: #7f1d1d;
+    }
+
+    .feedback-title {
+      font-weight: 900;
+      font-size: 1.18rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-breakdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .score-chip {
+      background: rgba(255, 255, 255, 0.75);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .next-btn-wrap {
+      text-align: right;
+      display: none;
+    }
+
+    .next-btn-wrap.show {
+      display: block;
+    }
+
+    /* --- 3. 結算與排行榜畫面 --- */
+    .result-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .trophy-icon {
+      font-size: 4rem;
+      display: inline-block;
+      animation: popScale 0.6s ease;
+    }
+
+    .result-header h2 {
+      font-size: 1.7rem;
+      color: var(--primary-dark);
+      margin: 6px 0;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .summary-card {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .summary-card .s-val {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .summary-card .s-lbl {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .leaderboard-section {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .lb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .lb-header h3 {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.98rem;
+    }
+
+    .lb-table th {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 2px solid #cbd5e1;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .lb-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      font-weight: 700;
+    }
+
+    .lb-table tr.current-run {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .rank-medal {
+      font-size: 1.15rem;
+    }
+
+    /* 錯題與解析回顧區 */
+    .review-section {
+      display: none;
+      margin-bottom: 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background: #ffffff;
+    }
+
+    .review-section.show {
+      display: block;
+    }
+
+    .review-item {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    .review-item:last-child {
+      border-bottom: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+      .status-bar, .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .q-text {
+        font-size: 1.12rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="appContainer">
+  <!-- 頂部標題列 -->
+  <header class="app-header">
+    <div class="app-title">
+      <span>🎯</span>
+      <span>圓周長生活應用大挑戰</span>
+    </div>
+    <div class="pi-badge">圓周率 = 3.14</div>
+  </header>
+
+  <!-- 畫面 1：開始畫面 -->
+  <section class="screen active" id="startScreen">
+    <div class="welcome-hero">
+      <div class="hero-icon">⭕</div>
+      <h2>準備好挑戰生活中的圓形了嗎？</h2>
+      <p>一共有 8 道生活應用題，第 8 題還有神秘魔王等著你！</p>
+    </div>
+
+    <div class="rules-box">
+      <div class="rule-item">
+        <span class="rule-icon">📐</span>
+        <div><strong>核心公式</strong><br>圓周長 ＝ 直徑 × 3.14</div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">🔥</span>
+        <div><strong>連擊加分 (Combo)</strong><br>連續答對分數加成最高！</div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">⏱️</span>
+        <div><strong>正向計時獎勵</strong><br>看清楚題目，越快答對加分越多</div>
+      </div>
+      <div class="rule-item">
+        <span class="rule-icon">👑</span>
+        <div><strong>第 8 題魔王關</strong><br>難度不變，答對獲得雙倍基礎分</div>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="playerNameInput">請輸入挑戰者代號：</label>
+      <input
+        type="text"
+        id="playerNameInput"
+        class="name-input"
+        placeholder="例如：數學小達人"
+        maxlength="12"
+        value="數學小達人"
+      />
+    </div>
+
+    <div style="text-align: center;">
+      <button class="btn btn-primary" id="startBtn">
+        <span>🚀 開始闖關挑戰</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 畫面 2：答題介面 -->
+  <section class="screen" id="quizScreen">
+    <div class="status-bar">
+      <div class="stat-pill">
+        <div class="stat-label">目前進度</div>
+        <div class="stat-value" id="progressText">1 / 8</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-label">計時器</div>
+        <div class="stat-value" id="timerText">00:00</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-label">目前積分</div>
+        <div class="stat-value" id="scoreText">0</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-label">連續答對</div>
+        <div class="stat-value" id="comboText">0 連擊</div>
+      </div>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <div class="boss-banner" id="bossBanner">
+      ⚠️ 警告！終極魔王關卡出現！答對獲得雙倍基礎分 ⚠️
+    </div>
+
+    <div class="question-card">
+      <div class="q-header">
+        <div class="q-object-badge" id="qBadge">🍪 第 1 題：圓形小餅乾</div>
+        <button type="button" class="hint-toggle-btn" id="hintBtn">
+          💡 看公式提示
+        </button>
+      </div>
+      <div class="q-text" id="qText">題目載入中...</div>
+      <div class="hint-box" id="hintBox"></div>
+    </div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+
+    <div class="feedback-panel" id="feedbackPanel">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div id="feedbackBody"></div>
+      <div class="score-breakdown" id="scoreBreakdown"></div>
+    </div>
+
+    <div class="next-btn-wrap" id="nextBtnWrap">
+      <button type="button" class="btn btn-primary" id="nextBtn" style="max-width: 240px;">
+        下一題 ➡️
+      </button>
+    </div>
+  </section>
+
+  <!-- 畫面 3：結算與排行榜 -->
+  <section class="screen" id="resultScreen">
+    <div class="result-header">
+      <div class="trophy-icon">🏆</div>
+      <h2 id="resultHeadline">恭喜完成所有挑戰！</h2>
+      <p id="resultSubtext" style="color: var(--text-muted); font-weight: 700;"></p>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="s-val" id="finalScore">0</div>
+        <div class="s-lbl">總積分</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-val" id="finalAccuracy">0%</div>
+        <div class="s-lbl">答對率</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-val" id="finalTime">00:00</div>
+        <div class="s-lbl">總花費時間</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-val" id="finalMaxCombo">0</div>
+        <div class="s-lbl">最高連擊</div>
+      </div>
+    </div>
+
+    <div class="leaderboard-section">
+      <div class="lb-header">
+        <h3>🏅 班級英雄排行榜</h3>
+        <button type="button" class="btn btn-secondary btn-small" id="resetLbBtn">
+          清除紀錄
+        </button>
+      </div>
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>名次</th>
+            <th>挑戰者</th>
+            <th>總積分</th>
+            <th>答對率</th>
+            <th>時間</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+    </div>
+
+    <div class="review-section" id="reviewSection">
+      <h4 style="margin-bottom: 10px; font-size: 1.1rem;">📝 本次答題明細與解析</h4>
+      <div id="reviewList"></div>
+    </div>
+
+    <div class="action-buttons">
+      <button type="button" class="btn btn-secondary" id="toggleReviewBtn">
+        📋 查看答題解析
+      </button>
+      <button type="button" class="btn btn-primary" id="restartBtn" style="max-width: 240px;">
+        🔄 再挑戰一次
+      </button>
+    </div>
+  </section>
+</div>
+
+<script>
+  // 8 題生活應用題庫（直徑 1~20，圓周率 3.14，含迷思概念誘答）
+  const QUESTIONS = [
+    {
+      id: 1,
+      icon: "🍪",
+      title: "圓形小餅乾",
+      diameter: 4,
+      unit: "公分",
+      answer: 12.56,
+      isBoss: false,
+      scenarioHtml: `媽媽烤了一片圓形手工餅乾，量出它的<span class="highlight-num">直徑是 4 公分</span>。請問這片餅乾一圈的圓周長是多少？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>圓周長 ＝ 直徑 × 3.14<br>把直徑 <strong>4</strong> 放進去算算看：<strong>4 × 3.14 ＝ ？</strong>`,
+      options: [
+        { value: 12.56, label: "12.56 公分", isCorrect: true, feedback: "" },
+        { value: 4, label: "4 公分", isCorrect: false, feedback: "這是「直徑」的長度喔！記得要乘以圓周率 3.14 才是圓周長。" },
+        { value: 6.28, label: "6.28 公分", isCorrect: false, feedback: "這是「半徑 × 3.14」的結果！題目已經給直徑 4 公分了，不用除以 2 喔。" },
+        { value: 7.14, label: "7.14 公分", isCorrect: false, feedback: "圓周長是用「乘法」不是加法喔！應該算 4 × 3.14，不是 4 + 3.14。" }
+      ]
+    },
+    {
+      id: 2,
+      icon: "🕒",
+      title: "教室圓形掛鐘",
+      diameter: 10,
+      unit: "公分",
+      answer: 31.4,
+      isBoss: false,
+      scenarioHtml: `教室牆上的圓形時鐘，<span class="highlight-num">直徑剛好是 10 公分</span>。請問時鐘外框一圈的圓周長是多少？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>圓周長 ＝ 直徑 × 3.14<br>算式：<strong>10 × 3.14 ＝ ？</strong>（乘以 10，小數點向右移一位喔！）`,
+      options: [
+        { value: 31.4, label: "31.4 公分", isCorrect: true, feedback: "" },
+        { value: 10, label: "10 公分", isCorrect: false, feedback: "這是掛鐘的直徑喔！還要再乘以 3.14 才會得到外框一圈的長度。" },
+        { value: 15.7, label: "15.7 公分", isCorrect: false, feedback: "你算成「半徑 5 × 3.14」囉！題目給的是直徑 10 公分，直接乘 3.14 就對了。" },
+        { value: 3.14, label: "3.14 公分", isCorrect: false, feedback: "小數點位置跑掉囉！10 乘以 3.14 會變大 10 倍，變成 31.4。" }
+      ]
+    },
+    {
+      id: 3,
+      icon: "🍕",
+      title: "美味大披薩",
+      diameter: 12,
+      unit: "吋",
+      answer: 37.68,
+      isBoss: false,
+      scenarioHtml: `同樂會訂了一個圓形大披薩，<span class="highlight-num">直徑是 12 吋</span>。請問披薩外圍起司餅皮一圈的圓周長是多少？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>圓周長 ＝ 直徑 × 3.14<br>算式：<strong>12 × 3.14 ＝ ？</strong>`,
+      options: [
+        { value: 37.68, label: "37.68 吋", isCorrect: true, feedback: "" },
+        { value: 12, label: "12 吋", isCorrect: false, feedback: "12 吋是披薩的直徑，起司餅皮圍一圈的圓周長要算 12 × 3.14 喔！" },
+        { value: 18.84, label: "18.84 吋", isCorrect: false, feedback: "這是「半徑 6 × 3.14」的答案！題目給的是直徑 12 吋，直接乘以 3.14 即可。" },
+        { value: 15.14, label: "15.14 吋", isCorrect: false, feedback: "不能把 12 和 3.14 加起來喔！要用乘法 12 × 3.14。" }
+      ]
+    },
+    {
+      id: 4,
+      icon: "🪑",
+      title: "圓形小餐桌",
+      diameter: 2,
+      unit: "公尺",
+      answer: 6.28,
+      isBoss: false,
+      scenarioHtml: `圖書角放了一張圓形小桌子，量出它的<span class="highlight-num">直徑是 2 公尺</span>。老師想沿著桌邊貼一圈防撞條，需要多長？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>防撞條圍一圈就是圓周長！<br>算式：<strong>2 × 3.14 ＝ ？</strong>`,
+      options: [
+        { value: 6.28, label: "6.28 公尺", isCorrect: true, feedback: "" },
+        { value: 2, label: "2 公尺", isCorrect: false, feedback: "2 公尺只是桌面中間的寬度（直徑），桌邊一圈要算 2 × 3.14 喔！" },
+        { value: 3.14, label: "3.14 公尺", isCorrect: false, feedback: "這是「半徑 1 × 3.14」的結果！題目給的是直徑 2 公尺，記得乘以 2 喔。" },
+        { value: 5.14, label: "5.14 公尺", isCorrect: false, feedback: "記得用乘法 2 × 3.14，不是加法 2 + 3.14 喔！" }
+      ]
+    },
+    {
+      id: 5,
+      icon: "⭕",
+      title: "體育課呼拉圈",
+      diameter: 8,
+      unit: "公寸",
+      answer: 25.12,
+      isBoss: false,
+      scenarioHtml: `體育課使用的呼拉圈，<span class="highlight-num">直徑是 8 公寸</span>。請問這個呼拉圈一圈的圓周長是多少？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>圓周長 ＝ 直徑 × 3.14<br>算式：<strong>8 × 3.14 ＝ ？</strong>`,
+      options: [
+        { value: 25.12, label: "25.12 公寸", isCorrect: true, feedback: "" },
+        { value: 8, label: "8 公寸", isCorrect: false, feedback: "這是呼拉圈的直徑喔！還要乘以 3.14 才是整圈塑膠管的長度。" },
+        { value: 12.56, label: "12.56 公寸", isCorrect: false, feedback: "你把直徑 8 除以 2 變成半徑 4 了！直接用直徑 8 × 3.14 就好。" },
+        { value: 24.12, label: "24.12 公寸", isCorrect: false, feedback: "很接近了！8 × 0.14 = 1.12，加上 8 × 3 = 24，合起來要進位變成 25.12 喔。" }
+      ]
+    },
+    {
+      id: 6,
+      icon: "🚲",
+      title: "腳踏車前輪",
+      diameter: 15,
+      unit: "公寸",
+      answer: 47.1,
+      isBoss: false,
+      scenarioHtml: `小明的腳踏車前輪，<span class="highlight-num">直徑是 15 公寸</span>。請問輪胎向前滾動剛好一圈的距離是多少？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>輪胎滾動一圈的距離 ＝ 輪胎的圓周長！<br>算式：<strong>15 × 3.14 ＝ ？</strong>`,
+      options: [
+        { value: 47.1, label: "47.1 公寸", isCorrect: true, feedback: "" },
+        { value: 15, label: "15 公寸", isCorrect: false, feedback: "輪胎轉一圈的距離就是圓周長，要拿直徑 15 乘以 3.14 喔！" },
+        { value: 23.55, label: "23.55 公寸", isCorrect: false, feedback: "這是「半徑 7.5 × 3.14」的結果！題目給的是直徑 15，不用除以 2。" },
+        { value: 18.14, label: "18.14 公寸", isCorrect: false, feedback: "不能用加法 15 + 3.14 喔！要用乘法 15 × 3.14。" }
+      ]
+    },
+    {
+      id: 7,
+      icon: "🌻",
+      title: "公園圓形花圃",
+      diameter: 16,
+      unit: "公尺",
+      answer: 50.24,
+      isBoss: false,
+      scenarioHtml: `公園裡有一座種滿向日葵的圓形花圃，<span class="highlight-num">直徑是 16 公尺</span>。沿著花圃外圍走一圈是多少公尺？`,
+      hintHtml: `<strong>解題小幫手：</strong><br>沿著外圍走一圈就是圓周長！<br>算式：<strong>16 × 3.14 ＝ ？</strong>`,
+      options: [
+        { value: 50.24, label: "50.24 公尺", isCorrect: true, feedback: "" },
+        { value: 16, label: "16 公尺", isCorrect: false, feedback: "16 公尺是穿過花圃中間的直徑，沿著外圍走一圈要算 16 × 3.14 喔！" },
+        { value: 25.12, label: "25.12 公尺", isCorrect: false, feedback: "這是「半徑 8 × 3.14」的答案！題目已經給直徑 16 公尺了，直接乘 3.14 吧。" },
+        { value: 48.24, label: "48.24 公尺", isCorrect: false, feedback: "差一點點！16 × 3 = 48，但 16 × 0.14 = 2.24，合起來要進位成 50.24 喔。" }
+      ]
+    },
+    {
+      id: 8,
+      icon: "🎡",
+      title: "【終極魔王】巨型摩天輪模型",
+      diameter: 20,
+      unit: "公尺",
+      answer: 62.8,
+      isBoss: true,
+      scenarioHtml: `最終大挑戰！遊樂園廣場上有一座巨大的圓形摩天輪模型，<span class="highlight-num">直徑是 20 公尺</span>。工作人員要在外圈裝上一整圈 LED 燈條，燈條總長是多少？`,
+      hintHtml: `<strong>魔王關卡提示：</strong><br>別被魔王嚇到了，算法跟前面一模一樣！<br>算式：<strong>20 × 3.14 ＝ ？</strong>（可以先算 2 × 3.14，再乘以 10 喔！）`,
+      options: [
+        { value: 62.8, label: "62.8 公尺", isCorrect: true, feedback: "" },
+        { value: 20, label: "20 公尺", isCorrect: false, feedback: "魔王題陷阱！20 公尺是摩天輪的直徑，外圈燈條總長要算 20 × 3.14 喔！" },
+        { value: 31.4, label: "31.4 公尺", isCorrect: false, feedback: "差一點就打敗魔王了！31.4 是「半徑 10 × 3.14」，題目給的是直徑 20 公尺喔。" },
+        { value: 6.28, label: "6.28 公尺", isCorrect: false, feedback: "20 乘以 3.14 會比 60 還大喔！注意小數點位置，答案是 62.8 公尺。" }
+      ]
+    }
+  ];
+
+  // 預設排行榜示範資料
+  const DEFAULT_LEADERBOARD = [
+    { name: "圓周率大師", score: 2510, accuracy: 100, totalTime: 38, maxCombo: 8, id: "preset-1" },
+    { name: "幾何小幫手", score: 2120, accuracy: 88, totalTime: 52, maxCombo: 5, id: "preset-2" },
+    { name: "快樂算數學", score: 1680, accuracy: 75, totalTime: 64, maxCombo: 4, id: "preset-3" }
+  ];
+
+  const STORAGE_KEY = "circumference_quiz_leaderboard_v1";
+
+  // 遊戲狀態
+  let state = {
+    playerName: "數學小達人",
+    currentIndex: 0,
+    score: 0,
+    combo: 0,
+    maxCombo: 0,
+    correctCount: 0,
+    totalSeconds: 0,
+    questionStartSec: 0,
+    timerInterval: null,
+    answered: false,
+    history: []
+  };
+
+  // DOM 參照
+  const appContainer = document.getElementById("appContainer");
+  const startScreen = document.getElementById("startScreen");
+  const quizScreen = document.getElementById("quizScreen");
+  const resultScreen = document.getElementById("resultScreen");
+
+  const playerNameInput = document.getElementById("playerNameInput");
+  const startBtn = document.getElementById("startBtn");
+
+  const progressText = document.getElementById("progressText");
+  const timerText = document.getElementById("timerText");
+  const scoreText = document.getElementById("scoreText");
+  const comboText = document.getElementById("comboText");
+  const progressBar = document.getElementById("progressBar");
+
+  const qBadge = document.getElementById("qBadge");
+  const hintBtn = document.getElementById("hintBtn");
+  const qText = document.getElementById("qText");
+  const hintBox = document.getElementById("hintBox");
+  const optionsGrid = document.getElementById("optionsGrid");
+
+  const feedbackPanel = document.getElementById("feedbackPanel");
+  const feedbackTitle = document.getElementById("feedbackTitle");
+  const feedbackBody = document.getElementById("feedbackBody");
+  const scoreBreakdown = document.getElementById("scoreBreakdown");
+  const nextBtnWrap = document.getElementById("nextBtnWrap");
+  const nextBtn = document.getElementById("nextBtn");
+
+  // 工具函式：格式化秒數為 MM:SS
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60).toString().padStart(2, "0");
+    const s = (sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  // 工具函式：陣列洗牌
+  function shuffleArray(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  // 切換畫面
+  function showScreen(screenEl) {
+    [startScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
+    screenEl.classList.add("active");
+  }
+
+  // 開始測驗
+  function startQuiz() {
+    const rawName = playerNameInput.value.trim();
+    state = {
+      playerName: rawName || "數學小達人",
+      currentIndex: 0,
+      score: 0,
+      combo: 0,
+      maxCombo: 0,
+      correctCount: 0,
+      totalSeconds: 0,
+      questionStartSec: 0,
+      timerInterval: null,
+      answered: false,
+      history: []
+    };
+
+    appContainer.classList.remove("boss-theme");
+    showScreen(quizScreen);
+    startTimer();
+    renderQuestion();
+  }
+
+  // 啟動正數計時器
+  function startTimer() {
+    clearInterval(state.timerInterval);
+    timerText.textContent = "00:00";
+    state.timerInterval = setInterval(() => {
+      state.totalSeconds++;
+      timerText.textContent = formatTime(state.totalSeconds);
+    }, 1000);
+  }
+
+  // 渲染當前題目
+  function renderQuestion() {
+    const q = QUESTIONS[state.currentIndex];
+    state.answered = false;
+    state.questionStartSec = state.totalSeconds;
+
+    // 魔王題視覺切換
+    if (q.isBoss) {
+      appContainer.classList.add("boss-theme");
+    } else {
+      appContainer.classList.remove("boss-theme");
+    }
+
+    // 更新狀態列
+    progressText.textContent = `${q.id} / ${QUESTIONS.length}`;
+    scoreText.textContent = state.score;
+    comboText.textContent = `${state.combo} 連擊`;
+    progressBar.style.width = `${(q.id / QUESTIONS.length) * 100}%`;
+
+    // 更新題目卡片
+    qBadge.textContent = `${q.icon} 第 ${q.id} 題：${q.title}`;
+    qText.innerHTML = q.scenarioHtml;
+    hintBox.innerHTML = q.hintHtml;
+    hintBox.classList.remove("show");
+
+    // 隱藏回饋與下一題按鈕
+    feedbackPanel.className = "feedback-panel";
+    nextBtnWrap.classList.remove("show");
+    nextBtn.textContent = q.id === QUESTIONS.length ? "查看結算成績 🏆" : "下一題 ➡️";
+
+    // 隨機排列四選一選項
+    const shuffledOptions = shuffleArray(q.options);
+    const letters = ["A", "B", "C", "D"];
+    optionsGrid.innerHTML = "";
+
+    shuffledOptions.forEach((opt, idx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option-btn";
+      btn.dataset.isCorrect = opt.isCorrect ? "true" : "false";
+      btn.innerHTML = `
+        <span class="option-letter">${letters[idx]}</span>
+        <span>${opt.label}</span>
+      `;
+      btn.addEventListener("click", () => handleAnswer(btn, opt, q));
+      optionsGrid.appendChild(btn);
+    });
+  }
+
+  // 處理作答點擊
+  function handleAnswer(selectedBtn, selectedOpt, question) {
+    if (state.answered) return;
+    state.answered = true;
+
+    const elapsedSec = Math.max(1, state.totalSeconds - state.questionStartSec);
+    const allButtons = optionsGrid.querySelectorAll(".option-btn");
+
+    // 鎖定所有按鈕並標示正解
+    allButtons.forEach(btn => {
+      btn.disabled = true;
+      if (btn.dataset.isCorrect === "true") {
+        btn.classList.add("correct");
+      }
+    });
+
+    if (selectedOpt.isCorrect) {
+      // 答對處理
+      state.combo++;
+      if (state.combo > state.maxCombo) {
+        state.maxCombo = state.combo;
+      }
+      state.correctCount++;
+
+      // 計分計算（Combo 權重高於速度分）
+      const basePoints = question.isBoss ? 200 : 100;
+      const comboBonus = state.combo * 50;
+      const speedBonus = Math.max(5, 30 - Math.floor(elapsedSec / 2));
+      const earned = basePoints + comboBonus + speedBonus;
+
+      state.score += earned;
+      scoreText.textContent = state.score;
+      comboText.textContent = `${state.combo} 連擊`;
+
+      // 觸發連擊彈跳動畫
+      comboText.classList.remove("combo-pop");
+      void comboText.offsetWidth;
+      comboText.classList.add("combo-pop");
+
+      feedbackPanel.className = "feedback-panel show is-correct";
+      feedbackTitle.innerHTML = question.isBoss
+        ? `🎉 太神啦！成功擊敗魔王！`
+        : `✅ 答對了！算式：${question.diameter} × 3.14 ＝ ${question.answer} ${question.unit}`;
+      feedbackBody.textContent = `花了 ${elapsedSec} 秒完成，繼續保持專注喔！`;
+      scoreBreakdown.innerHTML = `
+        <span class="score-chip">基礎分 +${basePoints}</span>
+        <span class="score-chip">🔥 ${state.combo} 連擊加分 +${comboBonus}</span>
+        <span class="score-chip">⚡ 速度加分 +${speedBonus}</span>
+        <span class="score-chip" style="background:#16a34a;color:#fff;">本題總得 +${earned} 分</span>
+      `;
+    } else {
+      // 答錯處理（重置 Combo 並顯示迷思概念診斷）
+      selectedBtn.classList.add("wrong");
+      state.combo = 0;
+      comboText.textContent = `0 連擊`;
+
+      feedbackPanel.className = "feedback-panel show is-wrong";
+      feedbackTitle.innerHTML = `💡 差一點點！正確答案是 ${question.answer} ${question.unit}`;
+      feedbackBody.innerHTML = `
+        <p style="margin-bottom:6px;"><strong>診斷小提醒：</strong>${selectedOpt.feedback}</p>
+        <p><strong>正確算式：</strong>${question.diameter} × 3.14 ＝ ${question.answer} ${question.unit}</p>
+      `;
+      scoreBreakdown.innerHTML = `<span class="score-chip">連擊歸零，下一題重新累積！</span>`;
+    }
+
+    // 記錄答題歷程
+    state.history.push({
+      id: question.id,
+      title: question.title,
+      diameter: question.diameter,
+      unit: question.unit,
+      answer: question.answer,
+      userChoice: selectedOpt.label,
+      isCorrect: selectedOpt.isCorrect,
+      feedback: selectedOpt.feedback
+    });
+
+    nextBtnWrap.classList.add("show");
+  }
+
+  // 前往下一題或結算
+  function goNext() {
+    if (state.currentIndex < QUESTIONS.length - 1) {
+      state.currentIndex++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  // 讀取與儲存排行榜
+  function loadLeaderboard() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.warn("無法讀取本地排行榜", e);
+    }
+    return [...DEFAULT_LEADERBOARD];
+  }
+
+  function saveLeaderboard(list) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {
+      console.warn("無法儲存本地排行榜", e);
+    }
+  }
+
+  // 結算畫面
+  function finishQuiz() {
+    clearInterval(state.timerInterval);
+    appContainer.classList.remove("boss-theme");
+    showScreen(resultScreen);
+
+    const accuracy = Math.round((state.correctCount / QUESTIONS.length) * 100);
+    document.getElementById("resultHeadline").textContent = `恭喜 ${state.playerName} 完成挑戰！`;
+    document.getElementById("resultSubtext").textContent =
+      accuracy === 100
+        ? "🌟 完美全對！你已經完全掌握圓周長的計算祕訣了！"
+        : `答對了 ${state.correctCount} 題，看看下方解析讓自己更進步吧！`;
+
+    document.getElementById("finalScore").textContent = state.score;
+    document.getElementById("finalAccuracy").textContent = `${accuracy}%`;
+    document.getElementById("finalTime").textContent = formatTime(state.totalSeconds);
+    document.getElementById("finalMaxCombo").textContent = `${state.maxCombo} 連擊`;
+
+    // 更新排行榜
+    const runId = "run-" + Date.now();
+    const currentRecord = {
+      id: runId,
+      name: state.playerName,
+      score: state.score,
+      accuracy: accuracy,
+      totalTime: state.totalSeconds,
+      maxCombo: state.maxCombo
+    };
+
+    const lb = loadLeaderboard();
+    lb.push(currentRecord);
+    // 依總積分高至低排序，同分則時間短者優先
+    lb.sort((a, b) => b.score - a.score || a.totalTime - b.totalTime);
+    const topList = lb.slice(0, 8);
+    saveLeaderboard(topList);
+
+    renderLeaderboard(topList, runId);
+    renderReviewList();
+  }
+
+  // 渲染排行榜表格
+  function renderLeaderboard(list, highlightId) {
+    const tbody = document.getElementById("leaderboardBody");
+    tbody.innerHTML = "";
+    const medals = ["🥇", "🥈", "🥉"];
+
+    list.forEach((entry, idx) => {
+      const tr = document.createElement("tr");
+      if (entry.id === highlightId) {
+        tr.classList.add("current-run");
+      }
+      const rankDisplay = idx < 3 ? `<span class="rank-medal">${medals[idx]}</span>` : `第 ${idx + 1} 名`;
+      tr.innerHTML = `
+        <td>${rankDisplay}</td>
+        <td>${escapeHtml(entry.name)} ${entry.id === highlightId ? "👈 (本次)" : ""}</td>
+        <td style="color: var(--primary-dark);">${entry.score} 分</td>
+        <td>${entry.accuracy}%</td>
+        <td>${formatTime(entry.totalTime)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 渲染作答解析列表
+  function renderReviewList() {
+    const reviewList = document.getElementById("reviewList");
+    reviewList.innerHTML = "";
+    state.history.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "review-item";
+      div.innerHTML = `
+        <div style="font-weight: 800; margin-bottom: 4px;">
+          ${item.isCorrect ? "✅" : "❌"} 第 ${item.id} 題：${item.title}（直徑 ${item.diameter} ${item.unit}）
+        </div>
+        <div>
+          你的選擇：<strong>${item.userChoice}</strong> ｜
+          正確算式：<span style="color: var(--success); font-weight: 800;">${item.diameter} × 3.14 ＝ ${item.answer} ${item.unit}</span>
+        </div>
+        ${!item.isCorrect ? `<div style="color: var(--danger); margin-top: 4px;">💡 提醒：${item.feedback}</div>` : ""}
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[m]));
+  }
+
+  // 事件綁定
+  startBtn.addEventListener("click", startQuiz);
+  playerNameInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") startQuiz();
+  });
+
+  hintBtn.addEventListener("click", () => {
+    hintBox.classList.toggle("show");
+  });
+
+  nextBtn.addEventListener("click", goNext);
+
+  document.getElementById("toggleReviewBtn").addEventListener("click", () => {
+    document.getElementById("reviewSection").classList.toggle("show");
+  });
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    document.getElementById("reviewSection").classList.remove("show");
+    showScreen(startScreen);
+  });
+
+  document.getElementById("resetLbBtn").addEventListener("click", () => {
+    saveLeaderboard([...DEFAULT_LEADERBOARD]);
+    renderLeaderboard([...DEFAULT_LEADERBOARD], "");
+  });
+</script>
+
+</body>
+</html>
